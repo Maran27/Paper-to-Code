@@ -1,6 +1,8 @@
 from app.agents.paper_reader import PaperReaderAgent
 from app.agents.paper_summary import PaperSummaryAgent
+from app.agents.paper_methodology import PaperMethodologyAgent
 from app.config.llm import get_llm
+from pprint import pprint
 
 def main():
     """
@@ -10,16 +12,15 @@ def main():
 
     llm = get_llm()
     summary_agent = PaperSummaryAgent(llm)
+    methodology_agent = PaperMethodologyAgent(llm)
 
     paper_document = reader.read("data/papers/1909.13522v1.pdf")
 
     paper_summary = summary_agent.read(paper_document)
-
-    print(paper_summary)
-
-    from pprint import pprint
-
     pprint(paper_summary.model_dump())
+
+    paper_methodology = methodology_agent.read(paper_document)
+    pprint(paper_methodology.model_dump())
 
     # print(paper)
     # print("File:", paper.metadata.file_name)
