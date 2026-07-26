@@ -1,6 +1,8 @@
 from app.agents.paper_reader import PaperReaderAgent
 from app.agents.paper_summary import PaperSummaryAgent
 from app.agents.paper_methodology import PaperMethodologyAgent
+from app.agents.paper_dataset import PaperDatasetAgent
+from app.agents.paper_hyperparameter import PaperHyperparametrersAgent
 from app.config.llm import get_llm
 from pprint import pprint
 
@@ -8,13 +10,14 @@ def main():
     """
     Main function to read a research paper, generate a summary, and print the summary.
     """
-    reader = PaperReaderAgent()
-
     llm = get_llm()
+    reader_agent = PaperReaderAgent()
     summary_agent = PaperSummaryAgent(llm)
     methodology_agent = PaperMethodologyAgent(llm)
+    dataset_agent = PaperDatasetAgent(llm)
+    hyperparameters_agent = PaperHyperparametrersAgent(llm)
 
-    paper_document = reader.read("data/papers/1909.13522v1.pdf")
+    paper_document = reader_agent.read("data/papers/1909.13522v1.pdf")
 
     paper_summary = summary_agent.read(paper_document)
     pprint(paper_summary.model_dump())
@@ -22,25 +25,11 @@ def main():
     paper_methodology = methodology_agent.read(paper_document)
     pprint(paper_methodology.model_dump())
 
-    # print(paper)
-    # print("File:", paper.metadata.file_name)
-    # print("Pages:", paper.metadata.page_count)
+    paper_dataset = dataset_agent.read(paper_document)
+    pprint(paper_dataset.model_dump())
 
-    # print()
-
-    # print(paper.pages[0].content[:500])
-
-    # print(f"File Name: {paper.metadata.file_name}")
-    # print(f"Page Count: {paper.metadata.page_count}")
-
-    # print("-" * 50)
-
-    # for page in paper.pages:
-    #     print(f"Page {page.page_number}")
-    #     print(f"Words: {page.word_count}")
-    #     print(f"Characters: {len(page.content)}")
-    #     print(page.content[:100])
-    #     print("-" * 50)
+    paper_hyperparameters = hyperparameters_agent.read(paper_document)
+    pprint(paper_hyperparameters.model_dump())
 
 if __name__ == "__main__":
     main()
